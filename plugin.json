@@ -1,0 +1,123 @@
+{
+  "apiVersion": 1,
+  "id": "modera.todo",
+  "name": "TODO",
+  "version": "0.1.0",
+  "description": "按会话维护任务清单与完成进度。",
+  "author": "Modera",
+  "category": "tasks",
+  "icon": "tasks",
+  "main": "dist/index.cjs",
+  "permissions": [
+    "storage.read",
+    "storage.write"
+  ],
+  "extensions": [
+    "conversation.header",
+    "tool.result"
+  ],
+  "agentGuidance": "Use the task list for multi-step work whose progress benefits from explicit tracking. Batch related updates and only use IDs returned by the tool.",
+  "tools": [
+    {
+      "id": "todo_manage",
+      "description": "Manage conversation TODOs: get/add/update/delete. For multiple new tasks, call add ONCE with content as a JSON string array (one task per element). Update/delete accepts todoId string or array; batch updates share content/status. Every action returns the full list. Use real returned IDs; never invent IDs. A batch is validated and saved atomically.",
+      "locales": {
+        "en": {
+          "title": "Manage tasks"
+        },
+        "zh-CN": {
+          "description": "管理当前会话待办。多个任务用 content 数组一次新增；todoId 数组可批量更新、删除。整批校验后一次保存，返回完整列表。"
+        }
+      },
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "action": {
+            "enum": [
+              "get",
+              "add",
+              "update",
+              "delete"
+            ]
+          },
+          "content": {
+            "oneOf": [
+              {
+                "maxLength": 2000,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "items": {
+                  "maxLength": 2000,
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "maxItems": 100,
+                "minItems": 1,
+                "type": "array"
+              }
+            ]
+          },
+          "status": {
+            "enum": [
+              "pending",
+              "inProgress",
+              "completed"
+            ]
+          },
+          "todoId": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "maxItems": 100,
+                "minItems": 1,
+                "type": "array",
+                "uniqueItems": true
+              }
+            ]
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "type": "object"
+      },
+      "presentation": {
+        "icon": "list",
+        "kind": "tasks",
+        "metrics": [
+          {
+            "format": "count",
+            "label": "项任务",
+            "labelEn": "tasks",
+            "path": "todos"
+          }
+        ],
+        "targets": [
+          "action"
+        ],
+        "tone": "teal"
+      },
+      "requiredPermissions": [
+        "storage.read",
+        "storage.write"
+      ],
+      "title": "管理任务清单"
+    }
+  ],
+  "locales": {
+    "en": {
+      "description": "Manage conversation tasks with atomic batch operations and a live panel."
+    },
+    "zh-CN": {
+      "name": "待办清单"
+    }
+  }
+}
