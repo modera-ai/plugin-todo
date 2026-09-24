@@ -1,5 +1,5 @@
 import React from "react";
-import { ToolExecution, ToolExecutionData } from "@modera/ui";
+import { ToolExecution, ToolExecutionData } from "@modera/ui/tool-execution";
 import type { PluginToolRendererProps } from "@modera/plugin-sdk";
 
 export default function TodoResult({
