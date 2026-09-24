@@ -154,6 +154,7 @@ export function todoUi(
     {
       id: "modera.todo.result",
       slot: "tool.result",
+      hostRenderer: "todo-result",
       toolNames: ["todo_manage"],
       requiredPermissions: ["storage.read"],
       async render(request) {
