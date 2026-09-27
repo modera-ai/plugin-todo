@@ -165,33 +165,10 @@ export function todoUi(
         let todos: Todo[] = [];
         if (request.tool?.result)
           todos = parse(JSON.parse(request.tool.result));
-        const children: PluginUiNode[] = [];
-        if (input?.content)
-          for (const text of Array.isArray(input.content)
-            ? input.content
-            : [input.content])
-            children.push({ type: "text", text });
-        else
-          for (const item of todos)
-            children.push({
-              type: "status",
-              label: item.content,
-              state:
-                item.status === "completed"
-                  ? "done"
-                  : item.status === "inProgress"
-                    ? "running"
-                    : "pending",
-            });
-        children.push({ type: "open-slot", label: w.open, target: panelId });
         return {
           title: w.actions[action] ?? w.title,
-          ...(request.tool?.result
-            ? {
-                badge: `${todos.filter((item) => item.status === "completed").length}/${todos.length} ${w.complete}`,
-              }
-            : {}),
-          children,
+          data: { todos, content: input?.content, panelId, openLabel: w.open },
+          children: [],
         };
       },
     },
