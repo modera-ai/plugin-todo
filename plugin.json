@@ -17,6 +17,12 @@
     "tool.result"
   ],
   "agentGuidance": "Use the task list for multi-step work whose progress benefits from explicit tracking. Batch related updates and only use IDs returned by the tool.",
+  "hostRenderers": {
+    "todo-result": {
+      "entry": "todo-result.js",
+      "root": "dist/ui"
+    }
+  },
   "tools": [
     {
       "id": "todo_manage",
