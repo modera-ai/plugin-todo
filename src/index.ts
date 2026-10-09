@@ -37,7 +37,7 @@ export const activate: PluginModule["activate"] = async (host) => {
       throw new Error("Invalid TODO content");
     if (
       status !== undefined &&
-      !["pending", "inProgress", "completed"].includes(status)
+      !["pending", "inProgress", "completed", "cancelled"].includes(status)
     )
       throw new Error("Invalid TODO status");
     const key = createHash("sha256").update(context.sessionId).digest("hex");
@@ -89,6 +89,7 @@ export const activate: PluginModule["activate"] = async (host) => {
         const temporary = `${path}.tmp`;
         await writeFile(temporary, JSON.stringify(todos));
         await rename(temporary, path);
+        host.invalidateUi?.(context.sessionId);
         return { todos };
       });
     queues.set(key, operation);

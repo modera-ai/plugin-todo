@@ -1,7 +1,7 @@
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { expect, it } from "vitest";
+import { expect, it, vi } from "vitest";
 import { activate as todo } from "../src";
 
 it("TODO persists scoped lists, serializes writes and rejects unknown IDs", async () => {
@@ -15,8 +15,10 @@ it("TODO persists scoped lists, serializes writes and rejects unknown IDs", asyn
         "storage.write",
       ]),
       signal: new AbortController().signal,
+      invalidateUi: vi.fn(),
     };
     const contributions = await todo(host);
+    expect(contributions!.ui!.find(item => item.id === "modera.todo.panel")).toMatchObject({ slot: "conversation.before-composer", hostRenderer: "todo-panel" });
     const execute = contributions!.tools![0]!.execute;
     const context = {
       sessionId: "s",
@@ -31,6 +33,7 @@ it("TODO persists scoped lists, serializes writes and rejects unknown IDs", asyn
       todos: { id: string; status: string }[];
     };
     expect(result.todos).toHaveLength(2);
+    expect(host.invalidateUi).toHaveBeenCalledWith("s");
     await expect(
       execute({ action: "add", content: ["valid", " "] }, context),
     ).rejects.toThrow("content");

@@ -14,13 +14,17 @@
     "storage.write"
   ],
   "extensions": [
-    "conversation.header",
+    "conversation.before-composer",
     "tool.result"
   ],
   "agentGuidance": "Use the task list for multi-step work whose progress benefits from explicit tracking. Batch related updates and only use IDs returned by the tool.",
   "hostRenderers": {
     "todo-result": {
       "entry": "todo-result.js",
+      "root": "dist/ui"
+    },
+    "todo-panel": {
+      "entry": "todo-panel.js",
       "root": "dist/ui"
     }
   },
@@ -70,7 +74,8 @@
             "enum": [
               "pending",
               "inProgress",
-              "completed"
+              "completed",
+              "cancelled"
             ]
           },
           "todoId": {

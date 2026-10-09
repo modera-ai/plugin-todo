@@ -1,5 +1,5 @@
 import React from "react";
-import { ToolExecution, AgentTaskResult, Button } from "@modera/ui";
+import { ToolExecution, TodoList } from "@modera/ui";
 import type { PluginToolRendererProps } from "@modera/plugin-sdk";
 
 export default function TodoResult({
@@ -10,8 +10,6 @@ export default function TodoResult({
   locale,
   open,
   onOpenChange,
-  data,
-  openSlot,
 }: PluginToolRendererProps) {
   let output: unknown = result;
   if (result) {
@@ -48,8 +46,17 @@ export default function TodoResult({
       onOpenChange={onOpenChange}
       locale={locale}
     >
-      <AgentTaskResult items={tasks} />
-      {!!data && typeof data === "object" && "panelId" in data && <Button variant="quiet" onClick={() => openSlot?.(String(data.panelId))}>{locale === "zh" ? "查看完整待办列表" : "Open task list"}</Button>}
+      <TodoList
+        maxHeight={152}
+        items={tasks.map((item, index) => ({
+          id: String(index),
+          title: item.content,
+          status:
+            item.status === "inProgress"
+              ? "in-progress"
+              : (item.status as "pending" | "completed" | "cancelled"),
+        }))}
+      />
     </ToolExecution>
   );
 }
