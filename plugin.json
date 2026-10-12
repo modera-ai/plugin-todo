@@ -3,7 +3,7 @@
   "activationScope": "scoped",
   "id": "modera.todo",
   "name": "TODO",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "按会话维护任务清单与完成进度。",
   "author": "Modera",
   "category": "tasks",
